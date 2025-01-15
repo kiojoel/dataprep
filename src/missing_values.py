@@ -1,7 +1,7 @@
 import pandas as pd
 def fill_missing_values(df, method='mean', columns = 'None'):
    '''
-    Fills missing values in the specified columns of the DataFrame using the selected method.
+    handles missing values in the specified columns of the DataFrame using the selected method.
 
     Parameters:
     -----------
@@ -12,15 +12,14 @@ def fill_missing_values(df, method='mean', columns = 'None'):
         - 'mean': Fills missing values with the column's mean.
         - 'median': Fills missing values with the column's median.
         - 'mode': Fills missing values with the column's most frequent value.
-        - 'ffill': Fills missing values using forward fill (propagates last valid value forward).
-        - 'bfill': Fills missing values using backward fill (propagates next valid value backward).
+        - 'drop': removes missing rows.
     columns : list or None, default=None
         List of columns to apply the missing value filling. If None, applies to all columns in the DataFrame.
 
     Returns:
     --------
     pandas DataFrame
-        DataFrame with missing values filled in the specified columns.
+        DataFrame with missing values filled or removed in the specified columns.
 
     Notes:
     ------
@@ -42,3 +41,33 @@ def fill_missing_values(df, method='mean', columns = 'None'):
       raise ValueError("Unsupported method")
 
    return df_copy
+
+def drop_missing_values(df, axis=0, threshold=None):
+  """
+    Drops rows or columns with missing values.
+
+    Parameters:
+    -----------
+    df : pandas DataFrame
+        Input DataFrame with missing values.
+    axis : int, default=0
+        Axis along which to drop:
+        - 0: drops rows with missing values
+        - 1: drops columns with missing values
+    threshold : int or None, default=None
+        Minimum non-NA values required to keep a row/column.
+        If None, all rows/columns with any missing values will be dropped.
+
+    Returns:
+    --------
+    pandas DataFrame
+        DataFrame with rows or columns dropped.
+    """
+  df_copy = df.copy()
+
+  if threshold is None:
+    df_copy = df_copy.dropna(axis=axis)
+  else:
+    df_copy = df_copy.dropna(axis=axis, thresh=threshold)
+
+  return df_copy
