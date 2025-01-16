@@ -1,5 +1,5 @@
 import pandas as pd
-def fill_missing_values(df, method='mean', columns = 'None'):
+def fill_missing_values(df, method='mean', columns = None):
    '''
     handles missing values in the specified columns of the DataFrame using the selected method.
 
