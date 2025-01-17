@@ -37,10 +37,18 @@ def encode_data(df, method='label', columns=None):
             df_copy[col] = le.fit_transform(df_copy[col])
 
     elif method == 'onehot':
+        ohe = OneHotEncoder(sparse_output=False)
         for col in columns:
+            encoded = ohe.fit_transform(df[[col]])
+            encoded_columns = pd.DataFrame(encoded, columns=ohe.get_feature_names_out([col]), index=df_copy.index)
+            df_copy = pd.concat([df_copy, encoded_columns], axis=1)
+            df_copy = df_copy.drop(columns=[col])
+
+
+        """ for col in columns:
             encoded = pd.get_dummies(df_copy[col], prefix=col)
             df_copy = pd.concat([df_copy, encoded], axis=1)
-            df_copy.drop(col, axis=1, inplace=True)
+            df_copy.drop(col, axis=1, inplace=True) """
     else:
         raise ValueError("Unsupported encoding method. Choose from: 'label', 'onehot'.")
 
